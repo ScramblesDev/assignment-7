@@ -1,7 +1,7 @@
 <?php
 class CSVHelper {
     //this reads and prints the entire csv file into a php array
-    function toPHPArray($csvFile) : array {
+    private function toPHPArray($csvFile) : array {
         $fh = fopen($csvFile, 'r');
     
         while (!feof($fh) ) {
@@ -10,6 +10,18 @@ class CSVHelper {
 
         fclose($fh);
         return $lines;
+    }
+
+    //converts a PHP array into a CSV file
+    private function convertToCSV(string $csvfile, array $myArray) {
+        //open file
+        $fh = fopen($csvfile, 'w');
+        //loop through
+        for ($i = 0; $i < count($myArray); $i++) {
+            fputs($fh, implode('#', $myArray[$i])."\n"); //remember that $newrecord is an array of strings!
+        }
+        //close the file
+        fclose($fh);
     }
     
     //this reads and prints one element of csv data that's been converted into a php array
@@ -25,20 +37,8 @@ class CSVHelper {
         fclose($fh);
     }
 
-    //converts a PHP array into a CSV file
-    public static function convertToCSV(string $csvfile, array $myArray) {
-        //open file
-        $fh = fopen($csvfile, 'w');
-        //loop through
-        for ($i = 0; $i < count($myArray); $i++) {
-            fputs($fh, implode('#', $myArray[$i])."\n"); //remember that $newrecord is an array of strings!
-        }
-        //close the file
-        fclose($fh);
-    }
-
     //edits a specific line of a csv file
-    public static function edit(string $csvfile, int $requestedRecordIndex, array $newRecord) {
+    public static function update(string $csvfile, int $requestedRecordIndex, array $newRecord) {
         //convert the data to a php array
         $convertedPHPArray = toPHPArray($csvfile);
 
